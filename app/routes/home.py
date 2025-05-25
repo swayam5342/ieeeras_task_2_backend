@@ -14,12 +14,24 @@ def read_root():
 
 
 @root.get("/items", response_model=list[Book])
-def read_items():
-    books = list(collection.find())
-    if not books:
+def read_items(
+    skip: int = 0,
+    limit: int = 10,
+    author: str | None = None,
+    genre: str | None = None,
+    year: int | None = None,
+):
+    query = {}
+    if author:
+        query["author"] = author
+    if genre:
+        query["genre"] = genre
+    if year:
+        query["year"] = year
+    items = list(collection.find(query).skip(skip).limit(limit))
+    if not items:
         raise HTTPException(status_code=404, detail="No items found")
-    return [Book(**book) for book in books]
-
+    return [Book(**{k: v for k, v in item.items() if k != "_id"}) for item in items]
 
 @root.post("/items", response_model=Book)
 def create_item(item: Book):
