@@ -96,6 +96,10 @@ uvicorn app:app --reload
 
 ```
 
+## 📸 Preview
+
+[Watch the demo](https://youtu.be/qxgYevlFtoA)
+
   
   
 
